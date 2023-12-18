@@ -35,11 +35,69 @@ The response contains the total number of requests for specified day.
 
 ## Setup
 
+### Prerequisites 
+
+Installed Docker is required
+
+### Start Service
+
+You can run both Postgres and Request Processing service in Dockers..
+
+`docker compose up`
+
+..or only Postgres and play with the local run in your IDE (no need to set any env variables)
+
+`docker compose up database `
+
 ## Testing
+
+After dockers are running service is ready for your requests.
 
 ### API check
 Swagger API documentation is available with on:
-http://localhost:8080/swagger-ui/
+http://localhost:8080/swagger-ui/index.html
+
+Note that due to manual parsing and validation input requests for /request endpoint, there is no strict schema for input parameter.
+Take this model as a reference:
+```json
+{"customerID":1,"tagID":2,"userID":"aaaaaaaa-bbbb-cccc-1111-222222222222","remoteIP":"123.234.56.78","timestamp":1500000000}
+```
 
 ### Test request
-You can use Postman for 
+You can use Postman for testing. 
+
+Request examples:
+
+To check invalid JSON
+```
+POST http://localhost:8080/api/v1/request
+
+{ 
+    "not": "all",
+    "properties": 
+```
+
+To check wrong data model
+```
+POST http://localhost:8080/api/v1/request
+
+{ 
+    "not": "all",
+    "properties": 1
+}
+```
+
+Sending valid request:
+```
+POST http://localhost:8080/api/v1/request
+
+{"customerID":1,"tagID":2,"userID":"aaaaaaaa-bbbb-cccc-1111-222222222222","remoteIP":"123.234.56.78","timestamp":1702879147417}
+```
+
+Getting statistics for customer:
+```
+POST http://localhost:8080/api/v1/statistics
+
+{"customerID":1,"date": "2023-12-18"}
+
+```
